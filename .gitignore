@@ -1,0 +1,22 @@
+# crap
+__pycache__/
+*.py[cod]
+*$py.class
+
+# env
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# vercel
+.vercel
+dist/
+build/
+
+# os files
+.DS_Store
+Thumbs.db

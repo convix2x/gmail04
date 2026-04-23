@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Gmail - Inbox</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="main-wrapper">
+        <header class="top-nav">
+            <div class="header-main">
+                <div class="logo-area">
+                    <img src="assets/logo.png" alt="Gmail" class="gmail-logo">
+                </div>
+                <div class="nav-and-search">
+                    <div class="user-info">
+                        <strong id="user-display">loading...</strong> | 
+                        <a href="#">Contacts</a> | 
+                        <a href="#">Settings</a> | 
+                        <a href="#">Help</a> | 
+                        <a href="#" onclick="signOut()">Sign out</a>
+                    </div>
+                    <div class="search-bar">
+                        <input type="text" size="40">
+                        <button>Search Mail</button>
+                        <button>Search the Web</button>
+                        <div class="search-options">
+                            <a href="#">Show search options</a> 
+                            <a href="#">Create a filter</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <div class="main-container">
+            <aside class="sidebar">
+                <a href="#" class="compose">Compose Mail</a>
+                <ul class="folders" id="folder-list">
+                    <li class="active"><a href="?folder=INBOX">Inbox (10)</a></li>
+                    <li><a href="?folder=Starred">Starred <span class="star">☆</span></a></li>
+                    <li><a href="?folder=Sent">Sent Mail</a></li>
+                    <li><a href="?folder=AllMail">All Mail</a></li>
+                    <li><a href="?folder=Spam">Spam (1)</a></li>
+                    <li><a href="?folder=Trash">Trash</a></li>
+                </ul>
+                <div class="labels-container">
+                    <div class="labels-header"><span class="arrow">▼</span> Labels</div>
+                    <div class="edit-labels"><a href="#">Edit labels</a></div>
+                </div>
+            </aside>
+            <main class="mail-area">
+                <div class="action-bar top">
+                    <div class="actions-left">
+                        <button>Archive</button>
+                        <select><option>More actions...</option></select>
+                        <a href="#" class="refresh" onclick="loadRealMail()">Refresh</a>
+                    </div>
+                    <div class="pagination">
+                        <strong>1 - 10 of 10</strong>
+                    </div>
+                </div>
+                <div class="select-bar">
+                    Select: <a href="#">All</a>, <a href="#">Read</a>, <a href="#">Unread</a>, <a href="#">Starred</a>, <a href="#">Unstarred</a>, <a href="#">None</a>
+                </div>
+                <table class="inbox-table" id="mail-table"></table>
+                <div class="select-bar bottom">
+                    Select: <a href="#">All</a>, <a href="#">Read</a>, <a href="#">Unread</a>, <a href="#">Starred</a>, <a href="#">Unstarred</a>, <a href="#">None</a>
+                </div>
+                <div class="action-bar bottom">
+                    <div class="actions-left">
+                        <button>Archive</button>
+                        <select><option>More actions...</option></select>
+                    </div>
+                    <div class="pagination">
+                        <strong>1 - 10 of 10</strong>
+                    </div>
+                </div>
+                <div id="message-view" style="display:none;">
+                    <div class="action-bar top">
+                        <div class="actions-left">
+                            <a href="#" onclick="showInbox()" class="back-link">« Back to Inbox</a>
+                            <button>Archive</button>
+                            <select><option>More actions...</option></select>
+                        </div>
+                        <div class="pagination">
+                            <strong>1 of 25</strong> <a href="#">Older ›</a>
+                        </div>
+                    </div>
+                    <div class="message-header">
+                        <h2 id="msg-subject">Subject Line</h2>
+                        <span class="label-tag">Inbox</span>
+                    </div>
+                    <div class="message-container">
+                        <div class="message-card">
+                            <div class="card-header">
+                                <div class="sender-info">
+                                    <span class="star">☆</span>
+                                    <strong id="msg-from-name">Name</strong> 
+                                    <span id="msg-from-email">email@address.com</span>
+                                </div>
+                                <div class="msg-options">
+                                    <a href="#">More options</a> 
+                                    <span id="msg-date">3:31pm</span>
+                                </div>
+                            </div>
+                            <div class="card-body" id="msg-body">
+                                Loading message body...
+                            </div>
+                            <div class="card-footer">
+                                <a href="#">Reply</a> | <a href="#">Forward</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <footer class="usage-info">
+                    <p class="usage-text">You are currently using <strong>0 MB (0%)</strong> of your <strong>1000 MB</strong>.</p>
+                    <p class="tips-text">Visit <a href="#">settings</a> to save time with <strong>keyboard shortcuts!</strong></p>
+                    <div class="footer-links">
+                        <a href="#">Terms of Use</a> - <a href="#">Privacy Policy</a> - <a href="#">Program Policies</a> - <a href="#">Google Home</a>
+                        <div class="copyright">©2004 Google</div>
+                    </div>
+                </footer>
+            </main>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

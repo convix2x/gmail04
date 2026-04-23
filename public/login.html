@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Gmail by Google</title>
+    <link rel="stylesheet" href="style.css">
+    <!---evil inline i should move this -->
+    <style>
+        body { background-color: #fff; display: flex; justify-content: center; align-items: center; height: 100vh; }
+        .login-box { 
+            width: 350px; 
+            border: 1px solid #C3D9FF; 
+            padding: 20px; 
+            background-color: #fff;
+        }
+        .login-header { 
+            background-color: #E8EEFA; 
+            margin: -20px -20px 20px -20px; 
+            padding: 10px; 
+            font-weight: bold;
+            border-bottom: 1px solid #C3D9FF;
+        }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-weight: bold; margin-bottom: 5px; }
+        .form-group input { width: 93%; padding: 3px; border: 1px solid #7F9DB9; }
+        .login-footer { margin-top: 20px; text-align: center; border-top: 1px solid #C3D9FF; padding-top: 10px; }
+        .btn-signin { font-weight: bold; padding: 3px 10px; }
+    </style>
+</head>
+<body>
+    <div class="login-box">
+        <div class="login-header">Sign in to Gmail</div>
+        <div style="text-align: center; margin-bottom: 20px;">
+            <img src="assets/logo.png" alt="Gmail" style="width: 143px;">
+        </div>
+        
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="email">Username:</label>
+                <input type="text" id="email" placeholder="example@gmail.com">
+            </div>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password">
+            </div>
+            <div class="form-group">
+                <label for="server">IMAP Server:</label>
+                <input type="text" id="server" value="imap.gmail.com">
+            </div>
+            <div style="text-align: right;">
+                <button type="submit" class="btn-signin">Sign in</button>
+            </div>
+        </form>
+
+        <div class="login-footer">
+            <a href="#" style="font-size: 11px;">Create an account</a> | 
+            <a href="#" style="font-size: 11px;">Forgot password?</a>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').onsubmit = function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const pass = document.getElementById('password').value;
+            const server = document.getElementById('server').value;
+
+            localStorage.setItem('gmail_user', email);
+            localStorage.setItem('gmail_pass', pass);
+            localStorage.setItem('gmail_server', server);
+            
+            window.location.href = 'index.html';
+        };
+    </script>
+</body>
+</html>

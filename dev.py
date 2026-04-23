@@ -11,6 +11,15 @@ def index():
 def static_files(path):
     return send_from_directory('public', path)
 
+@app.route('/api/fetch-body', methods=['POST'])
+def proxy_fetch_body():
+    with api_app.test_request_context(
+        path='/api/fetch-body',
+        method='POST',
+        json=request.json
+    ):
+        return api_app.full_dispatch_request()
+
 @app.route('/api/fetch-mail', methods=['POST'])
 def proxy_api():
     with api_app.test_request_context(
@@ -19,6 +28,8 @@ def proxy_api():
         json=request.json
     ):
         return api_app.full_dispatch_request()
+
+
 
 if __name__ == "__main__":
     print("Dev server running at http://localhost:5000")

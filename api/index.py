@@ -27,10 +27,13 @@ def fetch_mail():
         mail = imaplib.IMAP4_SSL(data.get('server'))
         mail.login(data.get('email'), data.get('password'))
         mail.select(data.get('folder', 'INBOX'))
-        _, messages = mail.search(None, "ALL")
-        if not messages[0]: return jsonify([])
+        _, unseen_messages = mail.search(None, "UNSEEN")
+        unseen_ids = unseen_messages[0].split()
         
-        ids = messages[0].split()[-20:]
+        _, all_messages = mail.search(None, "ALL")
+        if not all_messages[0]: return jsonify({"emails": [], "unreadCount": 0})
+        
+        ids = all_messages[0].split()[-20:]
         results = []
         for e_id in reversed(ids):
             _, msg_data = mail.fetch(e_id, "(RFC822)")
@@ -39,10 +42,15 @@ def fetch_mail():
                 "id": e_id.decode(),
                 "from": msg.get("From") or "Unknown",
                 "subject": get_decoded_subject(msg.get("Subject")),
-                "date": msg.get("Date") or ""
+                "date": msg.get("Date") or "",
+                "unseen": e_id in unseen_ids
             })
+        
         mail.logout()
-        return jsonify(results)
+        return jsonify({
+            "emails": results,
+            "unreadCount": len(unseen_ids)
+        })
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
@@ -56,7 +64,6 @@ def fetch_body():
         
         msg_id = str(data.get('index'))
         _, msg_data = mail.fetch(msg_id, "(RFC822)")
-        
         raw_email = msg_data[0][1]
         msg = email.message_from_bytes(raw_email)
         

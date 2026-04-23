@@ -1,128 +1,64 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Gmail - Inbox</title>
+    <title>Gmail</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
-    <div class="main-wrapper">
-        <header class="top-nav">
-            <div class="header-main">
-                <div class="logo-area">
-                    <img src="assets/logo.png" alt="Gmail" class="gmail-logo">
-                </div>
-                <div class="nav-and-search">
-                    <div class="user-info">
-                        <strong id="user-display">loading...</strong> | 
-                        <a href="#">Contacts</a> | 
-                        <a href="#">Settings</a> | 
-                        <a href="#">Help</a> | 
-                        <a href="#" onclick="signOut()">Sign out</a>
-                    </div>
-                    <div class="search-bar">
-                        <input type="text" size="40">
-                        <button>Search Mail</button>
-                        <button>Search the Web</button>
-                        <div class="search-options">
-                            <a href="#">Show search options</a> 
-                            <a href="#">Create a filter</a>
-                        </div>
-                    </div>
+<body class="login-page">
+    <div class="wrapper">
+        <header class="login-header">
+            <img src="/assets/logo.png" alt="Gmail beta" class="main-logo">
+            <div class="header-right">
+                <nav class="top-nav">
+                    <a href="#">Contacts</a> | <a href="#">Settings</a> | <a href="#">Help</a>
+                </nav>
+                <div class="welcome-bar">
+                    Welcome to gmail04
                 </div>
             </div>
         </header>
-        <div class="main-container">
-            <aside class="sidebar">
-                <a href="#" class="compose">Compose Mail</a>
-                <ul class="folders" id="folder-list">
-                    <li class="active"><a href="?folder=INBOX">Inbox (10)</a></li>
-                    <li><a href="?folder=Starred">Starred <span class="star">☆</span></a></li>
-                    <li><a href="?folder=Sent">Sent Mail</a></li>
-                    <li><a href="?folder=AllMail">All Mail</a></li>
-                    <li><a href="?folder=Spam">Spam (1)</a></li>
-                    <li><a href="?folder=Trash">Trash</a></li>
+        <main class="login-container">
+            <section class="marketing-side">
+                <h2 class="hero-text">A nostalgic approach to email.</h2>
+                <p>gmail04 is an experiment in a new (not really) kind of webmail, built on the idea that you should never have to change your muscle memory and you should always be able to find the message you want. The key features are:</p>
+                <ul class="feature-list">
+                    <li><span class="dot"></span><div class="feature-text"><strong>Search, don't sort.</strong><br>Use regular search to find the exact message you want, no matter when it was sent or received.</div></li>
+                    <li><span class="dot"></span><div class="feature-text"><strong>Don't throw anything away.</strong><br>However much your computers has of free storage so you'll never need to delete another message.</div></li>
+                    <li><span class="dot"></span><div class="feature-text"><strong>Keep it all in context.</strong><br>Each message is grouped with all its replies and displayed as a conversation.</div></li>
+                    <li><span class="dot"></span><div class="feature-text"><strong>No ads at all.</strong><br>You see only links to related Google web pages for accuracy.</div></li>
                 </ul>
-                <div class="labels-container">
-                    <div class="labels-header"><span class="arrow">▼</span> Labels</div>
-                    <div class="edit-labels"><a href="#">Edit labels</a></div>
+            </section>
+            <aside class="login-sidebar">
+                <div class="login-box">
+                    <h3>Gmail Sign In</h3>
+                    <form id="login-form">
+                        <div class="input-row"><label for="email">Username:</label><input type="text" id="email" value="coni@national.shitposting.agency"></div>
+                        <div class="input-row"><label for="pass">Password:</label><input type="password" id="pass"></div>
+                        <div class="input-row"><label for="server">IMAP:</label><input type="text" id="server" value="imap.gmail.com"></div>
+                        <div class="check-row"><input type="checkbox" id="remember"><label for="remember">Don't ask for my password for 2 weeks.</label></div>
+                        <div class="button-row"><button type="submit" class="sign-in-btn">Sign in</button></div>
+                    </form>
+                    <div class="forgot-link"><a href="#">Forgot your password?</a></div>
+                </div>
+                <div class="promo-box">
+                    <p>Learn more <a href="#">about gmail04</a>.</p>
+                    <p>A few words about <a href="#">privacy and gmail04</a>.</p>
+                    <p>Read gmail04 <a href="#">reviews and comments</a>.</p>
                 </div>
             </aside>
-            <main class="mail-area">
-                <div class="action-bar top">
-                    <div class="actions-left">
-                        <button>Archive</button>
-                        <select><option>More actions...</option></select>
-                        <a href="#" class="refresh" onclick="loadRealMail()">Refresh</a>
-                    </div>
-                    <div class="pagination">
-                        <strong>1 - 10 of 10</strong>
-                    </div>
-                </div>
-                <div class="select-bar">
-                    Select: <a href="#">All</a>, <a href="#">Read</a>, <a href="#">Unread</a>, <a href="#">Starred</a>, <a href="#">Unstarred</a>, <a href="#">None</a>
-                </div>
-                <table class="inbox-table" id="mail-table"></table>
-                <div class="select-bar bottom">
-                    Select: <a href="#">All</a>, <a href="#">Read</a>, <a href="#">Unread</a>, <a href="#">Starred</a>, <a href="#">Unstarred</a>, <a href="#">None</a>
-                </div>
-                <div class="action-bar bottom">
-                    <div class="actions-left">
-                        <button>Archive</button>
-                        <select><option>More actions...</option></select>
-                    </div>
-                    <div class="pagination">
-                        <strong>1 - 10 of 10</strong>
-                    </div>
-                </div>
-                <div id="message-view" style="display:none;">
-                    <div class="action-bar top">
-                        <div class="actions-left">
-                            <a href="#" onclick="showInbox()" class="back-link">« Back to Inbox</a>
-                            <button>Archive</button>
-                            <select><option>More actions...</option></select>
-                        </div>
-                        <div class="pagination">
-                            <strong>1 of 25</strong> <a href="#">Older ›</a>
-                        </div>
-                    </div>
-                    <div class="message-header">
-                        <h2 id="msg-subject">Subject Line</h2>
-                        <span class="label-tag">Inbox</span>
-                    </div>
-                    <div class="message-container">
-                        <div class="message-card">
-                            <div class="card-header">
-                                <div class="sender-info">
-                                    <span class="star">☆</span>
-                                    <strong id="msg-from-name">Name</strong> 
-                                    <span id="msg-from-email">email@address.com</span>
-                                </div>
-                                <div class="msg-options">
-                                    <a href="#">More options</a> 
-                                    <span id="msg-date">3:31pm</span>
-                                </div>
-                            </div>
-                            <div class="card-body" id="msg-body">
-                                Loading message body...
-                            </div>
-                            <div class="card-footer">
-                                <a href="#">Reply</a> | <a href="#">Forward</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <footer class="usage-info">
-                    <p class="usage-text">You are currently using <strong>0 MB (0%)</strong> of your <strong>1000 MB</strong>.</p>
-                    <p class="tips-text">Visit <a href="#">settings</a> to save time with <strong>keyboard shortcuts!</strong></p>
-                    <div class="footer-links">
-                        <a href="#">Terms of Use</a> - <a href="#">Privacy Policy</a> - <a href="#">Program Policies</a> - <a href="#">Google Home</a>
-                        <div class="copyright">©2004 Google</div>
-                    </div>
-                </footer>
-            </main>
-        </div>
+        </main>
+        <footer class="login-footer">
+            <span class="copyright">©2026 convix</span> - gmail04 is not affiliated with Google. - <a href="#">Privacy Policy</a> - <a href="#">Program Policies</a> - <a href="#">Terms of Use</a>
+        </footer>
     </div>
-    <script src="script.js"></script>
+    <script>
+        document.getElementById('login-form').onsubmit = (e) => {
+            e.preventDefault();
+            localStorage.setItem('gmail_user', document.getElementById('email').value);
+            localStorage.setItem('gmail_pass', document.getElementById('pass').value);
+            localStorage.setItem('gmail_server', document.getElementById('server').value);
+            window.location.href = 'mail.html'; 
+        };
+    </script>
 </body>
 </html>

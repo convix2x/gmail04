@@ -1,7 +1,8 @@
 async function openEmail(id, subject, from) {
     const msgView = document.getElementById('message-view');
     const mailTable = document.getElementById('mail-table');
-    
+    if (!msgView || !mailTable) return;
+
     mailTable.style.display = 'none';
     document.querySelectorAll('.select-bar, .action-bar').forEach(el => el.style.display = 'none');
     msgView.style.display = 'block';
@@ -10,12 +11,10 @@ async function openEmail(id, subject, from) {
     document.getElementById('msg-from-name').textContent = from;
     document.getElementById('msg-body').textContent = "Loading message body...";
 
-    const urlParams = new URLSearchParams(window.location.search);
     const creds = {
         email: localStorage.getItem('gmail_user'),
         password: localStorage.getItem('gmail_pass'),
         server: localStorage.getItem('gmail_server'),
-        folder: urlParams.get('folder') || 'INBOX',
         index: id
     };
 
@@ -25,12 +24,6 @@ async function openEmail(id, subject, from) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(creds)
         });
-
-        if (!response.ok) {
-            const errData = await response.text();
-            throw new Error(`Server returned ${response.status}`);
-        }
-        
         const data = await response.json();
         document.getElementById('msg-body').textContent = data.body;
     } catch (err) {
@@ -40,7 +33,16 @@ async function openEmail(id, subject, from) {
 
 async function loadRealMail(folderName = 'INBOX') {
     const table = document.getElementById('mail-table');
-    table.innerHTML = '<tr><td colspan="4" style="text-align:center; padding:20px;">Loading...</td></tr>';
+    if (!table) return;
+
+    const cacheKey = `gmail_cache_${folderName}`;
+    const cachedData = localStorage.getItem(cacheKey);
+
+    if (cachedData) {
+        const data = JSON.parse(cachedData);
+        renderTable(data.emails);
+        updateSidebarCounts(data.unreadCount);
+    }
 
     const creds = {
         email: localStorage.getItem('gmail_user'),
@@ -57,28 +59,41 @@ async function loadRealMail(folderName = 'INBOX') {
         });
         const data = await response.json();
         
-        table.innerHTML = ''; 
-        data.forEach(mail => {
-            const tr = document.createElement('tr');
-            tr.className = 'unread';
-            tr.onclick = () => openEmail(mail.id, mail.subject, mail.from);
-            tr.innerHTML = `
-                <td class="col-check"><input type="checkbox"></td>
-                <td class="col-sender">${mail.from.split('<')[0].replace(/"/g, '')}</td>
-                <td class="col-subject">${mail.subject}</td>
-                <td class="col-time">${new Date(mail.date).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</td>
-            `;
-            table.appendChild(tr);
-        });
+        localStorage.setItem(cacheKey, JSON.stringify(data));
+        renderTable(data.emails);
+        updateSidebarCounts(data.unreadCount);
     } catch (err) {
-        table.innerHTML = `<tr><td colspan="4" style="color:red; text-align:center;">${err.message}</td></tr>`;
+        console.error("Fetch failed:", err);
     }
 }
 
+function renderTable(emails) {
+    const table = document.getElementById('mail-table');
+    if (!table) return;
+    table.innerHTML = ''; 
+    emails.forEach(mail => {
+        const tr = document.createElement('tr');
+        tr.className = mail.unseen ? 'unread' : 'read'; 
+        tr.onclick = () => openEmail(mail.id, mail.subject, mail.from);
+        tr.innerHTML = `
+            <td class="col-check"><input type="checkbox"></td>
+            <td class="col-sender">${mail.from.split('<')[0].replace(/"/g, '')}</td>
+            <td class="col-subject">${mail.subject}</td>
+            <td class="col-time">${new Date(mail.date).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</td>
+        `;
+        table.appendChild(tr);
+    });
+}
+
+function updateSidebarCounts(count) {
+    const inboxLink = document.querySelector('.inbox-link');
+    if (!inboxLink) return;
+    inboxLink.innerHTML = count > 0 ? `<b>Inbox (${count})</b>` : 'Inbox';
+}
+
 document.addEventListener('DOMContentLoaded', () => {
-    const user = localStorage.getItem('gmail_user');
-    if (!user) {
-        window.location.href = 'login.html';
+    if (!localStorage.getItem('gmail_user')) {
+        window.location.href = 'index.html';
         return;
     }
     const urlParams = new URLSearchParams(window.location.search);
@@ -86,7 +101,18 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function showInbox() {
-    document.getElementById('mail-table').style.display = 'table';
-    document.getElementById('message-view').style.display = 'none';
+    const table = document.getElementById('mail-table');
+    const msgView = document.getElementById('message-view');
+    if (table) table.style.display = 'table';
+    if (msgView) msgView.style.display = 'none';
     document.querySelectorAll('.select-bar, .action-bar').forEach(el => el.style.display = 'flex');
+}
+
+function refreshInbox() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const folder = urlParams.get('folder') || 'INBOX';
+    
+    localStorage.removeItem(`gmail_cache_${folder}`);
+    
+    loadRealMail(folder);
 }
